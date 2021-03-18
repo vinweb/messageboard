@@ -20,30 +20,37 @@ const threadSchema = new Schema({
 });
 
 module.exports = function (app) {
-    app.route("/api/threads/:board").post((req, res) => {
-        let board = req.params.board;
-        let thread = mongoose.model(board, threadSchema);
-        let newThread = new thread({
-            text: req.body.text,
-            delete_password: req.body.delete_password,
+    app.route("/api/threads/:board")
+        .post((req, res) => {
+            let board = req.params.board;
+            let thread = mongoose.model(board, threadSchema);
+            let newThread = new thread({
+                text: req.body.text,
+                delete_password: req.body.delete_password,
+            });
+            //console.log(req.body);
+            //console.log(req.params);
+            newThread.save((err, doc) => {
+                if (err) return console.log("Error: " + err);
+                console.log("Save is successful.");
+                return res.redirect("/b/board/");
+            });
+        })
+        .get((req, res) => {
+            let board = req.params.board;
+            let thread = mongoose.model(board, threadSchema);
+            thread.find({}, (err, result) => {
+                console.log("find");
+                if (err) console.log(err);
+                res.json(result);
+            });
         });
-        //console.log(req.body);
-        //console.log(req.params);
-        newThread.save((err, doc) => {
-            if (err) return console.log("Error: " + err);
-            console.log("Save is successful. " + doc);
-        });
-    });
 
     app.route("/api/replies/:board").post(async (req, res) => {
         let board = req.params.board;
         let thread = mongoose.model(board, threadSchema);
         let id = req.body.thread_id;
-        /* let newReply = new thread({
-            text: req.body.text,
-            delete_password: req.body.delete_password,
-        }); */
-        //let result = await thread.findById(id).exec();
+
         thread.findByIdAndUpdate(
             id,
             {
@@ -63,10 +70,5 @@ module.exports = function (app) {
                 }
             }
         );
-        //console.log(result);
-        /* newThread.replies.push({
-            text: req.body.text,
-            delete_password: req.body.delete_password,
-        }); */
     });
 };

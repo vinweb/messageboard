@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./public/style.css">
+    <link rel="stylesheet" href="/public/style.css">
   </head>
   <body>
     <header>
@@ -33,6 +33,7 @@
     <script>
       $(function() {
         var currentBoard = window.location.pathname.slice(3,-1);
+        console.log(currentBoard)
         var url = "/api/threads/"+currentBoard;
         $('#boardTitle').text('Welcome to '+window.location.pathname)
         $.ajax({
