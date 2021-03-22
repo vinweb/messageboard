@@ -149,5 +149,35 @@ module.exports = function (app) {
                     }
                     res.json(doc);
                 });
+        })
+        .delete((req, res) => {
+            let thread = mongoose.model(req.params.board, threadSchema);
+
+            thread.findOne(
+                { _id: req.body.thread_id, "replies._id": req.body.reply_id },
+                //{ $set: { "replies.$.text": "[deleted]" } },
+                //{ new: true },
+                (err, doc) => {
+                    if (err) console.log(err);
+                    let reply = doc.replies.id(req.body.reply_id);
+                    if (req.body.delete_password === reply.delete_password) {
+                        thread.findOneAndUpdate(
+                            {
+                                _id: req.body.thread_id,
+                                "replies._id": req.body.reply_id,
+                            },
+                            { $set: { "replies.$.text": "[deleted]" } },
+                            { new: true },
+                            (err, doc) => {
+                                if (err) console.log(err);
+                                return res.json("success");
+                            }
+                        );
+                    }
+                    if (req.body.delete_password !== reply.delete_password) {
+                        res.json("incorrect password");
+                    }
+                }
+            );
         });
 };
