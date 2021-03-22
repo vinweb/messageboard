@@ -8,7 +8,7 @@ const replySchema = new Schema({
     text: String,
     delete_password: String,
     created_on: { type: Date, default: Date.now },
-    reported: { type: Boolean, default: true },
+    reported: { type: Boolean, default: false },
 });
 
 const threadSchema = new Schema({
@@ -16,7 +16,7 @@ const threadSchema = new Schema({
     delete_password: String,
     created_on: { type: Date, default: Date.now },
     bumped_on: { type: Date, default: Date.now },
-    reported: { type: Boolean, default: true },
+    reported: { type: Boolean, default: false },
     replies: [replySchema],
 });
 
@@ -29,8 +29,6 @@ module.exports = function (app) {
                 text: req.body.text,
                 delete_password: req.body.delete_password,
             });
-            //console.log(req.body);
-            //console.log(req.params);
             newThread.save((err, doc) => {
                 if (err) return console.log("Error: " + err);
                 console.log("Save is successful.");
@@ -40,19 +38,10 @@ module.exports = function (app) {
         .get((req, res) => {
             let board = req.params.board;
             let thread = mongoose.model(board, threadSchema);
-            /* thread
-                .find({}, { replies: { $limit: 1 } })
-                .sort({ created_on: -1 })
-                .limit(10)
-                .exec((err, result) => {
-                    console.log("find");
-                    if (err) console.log(err);
-                    res.json(result);
-                }); */
+
             thread
                 .aggregate([{ $limit: 10 }, { $sort: { created_on: -1 } }])
                 .exec((err, result) => {
-                    //console.log(result[9].replies);
                     if (err) console.log(err);
                     for (let thread of result) {
                         delete thread.delete_password;
@@ -65,15 +54,12 @@ module.exports = function (app) {
                                 delete reply.delete_password;
                                 delete reply.reported;
                             }
-                            //console.log(thread.replies);
                         }
                     }
                     res.json(result);
                 });
         })
         .delete((req, res) => {
-            // console.log(req.body);
-            // console.log(req.params);
             let board = req.params.board;
             let thread = mongoose.model(board, threadSchema);
             let id = req.body.thread_id;
@@ -88,13 +74,17 @@ module.exports = function (app) {
                     res.json("incorrect password");
                 }
             });
-            /* thread.findByIdAndRemove(id, (err, docs) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    alert("success");
+        })
+        .put((req, res) => {
+            let thread = mongoose.model(req.body.board, threadSchema);
+            thread.findByIdAndUpdate(
+                req.body.thread_id,
+                { reported: true },
+                (err, doc) => {
+                    if (err) console.log(err);
+                    res.json("success");
                 }
-            }); */
+            );
         });
 
     app.route("/api/replies/:board")
@@ -127,14 +117,7 @@ module.exports = function (app) {
             let board = req.params.board;
             let id = req.query.thread_id;
             let thread = mongoose.model(board, threadSchema);
-            /* thread.findById(id, (err, doc) => {
-                if (err) console.log(err);
-                delete doc.delete_password;
-                console.log(doc.delete_password);
-                delete doc.reported;
-                console.log(doc);
-                res.json(doc);
-            }); */
+
             thread
                 .aggregate([{ $match: { _id: ObjectId(id) } }])
                 .exec((err, doc) => {
@@ -155,8 +138,6 @@ module.exports = function (app) {
 
             thread.findOne(
                 { _id: req.body.thread_id, "replies._id": req.body.reply_id },
-                //{ $set: { "replies.$.text": "[deleted]" } },
-                //{ new: true },
                 (err, doc) => {
                     if (err) console.log(err);
                     let reply = doc.replies.id(req.body.reply_id);
@@ -177,6 +158,22 @@ module.exports = function (app) {
                     if (req.body.delete_password !== reply.delete_password) {
                         res.json("incorrect password");
                     }
+                }
+            );
+        })
+        .put((req, res) => {
+            let thread = mongoose.model(req.body.board, threadSchema);
+
+            thread.findOneAndUpdate(
+                {
+                    _id: req.body.thread_id,
+                    "replies._id": req.body.reply_id,
+                },
+                { $set: { "replies.$.reported": true } },
+                { new: true },
+                (err, doc) => {
+                    if (err) console.log(err);
+                    return res.json("success");
                 }
             );
         });
