@@ -18,6 +18,7 @@ const threadSchema = new Schema({
     bumped_on: { type: Date, default: Date.now },
     reported: { type: Boolean, default: false },
     replies: [replySchema],
+    replycount: { type: Number, default: 0 },
 });
 
 module.exports = function (app) {
@@ -31,7 +32,6 @@ module.exports = function (app) {
             });
             newThread.save((err, doc) => {
                 if (err) return console.log("Error: " + err);
-                console.log("Save is successful.");
                 return res.redirect(`/b/${board}/`);
             });
         })
@@ -40,10 +40,10 @@ module.exports = function (app) {
             let thread = mongoose.model(board, threadSchema);
 
             thread
-                .aggregate([{ $limit: 10 }, { $sort: { created_on: -1 } }])
-                .exec((err, result) => {
+                .aggregate([{ $sort: { created_on: -1 } }, { $limit: 10 }])
+                .exec((err, docs) => {
                     if (err) console.log(err);
-                    for (let thread of result) {
+                    for (let thread of docs) {
                         delete thread.delete_password;
                         delete thread.reported;
                         if (thread.replies.length > 3) {
@@ -56,7 +56,7 @@ module.exports = function (app) {
                             }
                         }
                     }
-                    res.json(result);
+                    res.json(docs);
                 });
         })
         .delete((req, res) => {
@@ -76,7 +76,8 @@ module.exports = function (app) {
             });
         })
         .put((req, res) => {
-            let thread = mongoose.model(req.body.board, threadSchema);
+            let board = req.params.board;
+            let thread = mongoose.model(board, threadSchema);
             thread.findByIdAndUpdate(
                 req.body.thread_id,
                 { reported: true },
@@ -88,7 +89,7 @@ module.exports = function (app) {
         });
 
     app.route("/api/replies/:board")
-        .post(async (req, res) => {
+        .post((req, res) => {
             let board = req.params.board;
             let thread = mongoose.model(board, threadSchema);
             let id = req.body.thread_id;
@@ -97,6 +98,7 @@ module.exports = function (app) {
                 id,
                 {
                     $set: { bumped_on: Date.now() },
+                    $inc: { replycount: 1 },
                     $push: {
                         replies: {
                             text: req.body.text,
@@ -104,11 +106,11 @@ module.exports = function (app) {
                         },
                     },
                 },
-                function (err, docs) {
+                (err, doc) => {
                     if (err) {
                         console.log(err);
                     } else {
-                        console.log("Updated thread.");
+                        return res.redirect(`/b/${board}/${doc._id}`);
                     }
                 }
             );
@@ -117,10 +119,25 @@ module.exports = function (app) {
             let board = req.params.board;
             let id = req.query.thread_id;
             let thread = mongoose.model(board, threadSchema);
+            //console.log(req.params);
+            //console.log(req.query);
+            /* thread.findById(id, (err, doc) => {
+                if (err) console.log(err);
+                delete doc.reported;
+                delete doc.delete_password;
+                if (doc.replies.length > 0) {
+                    for (let reply of doc.replies) {
+                        delete reply.delete_password;
+                        delete reply.reported;
+                    }
+                }
+                res.json(doc);
+            }); */
 
             thread
                 .aggregate([{ $match: { _id: ObjectId(id) } }])
                 .exec((err, doc) => {
+                    //console.log(doc);
                     if (err) console.log(err);
                     delete doc[0].reported;
                     delete doc[0].delete_password;
@@ -134,7 +151,8 @@ module.exports = function (app) {
                 });
         })
         .delete((req, res) => {
-            let thread = mongoose.model(req.params.board, threadSchema);
+            let board = req.params.board;
+            let thread = mongoose.model(board, threadSchema);
 
             thread.findOne(
                 { _id: req.body.thread_id, "replies._id": req.body.reply_id },
@@ -162,7 +180,8 @@ module.exports = function (app) {
             );
         })
         .put((req, res) => {
-            let thread = mongoose.model(req.body.board, threadSchema);
+            let board = req.params.board;
+            let thread = mongoose.model(board, threadSchema);
 
             thread.findOneAndUpdate(
                 {

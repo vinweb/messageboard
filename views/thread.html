@@ -33,13 +33,14 @@
           type: "GET",
           url: url,
           data:{thread_id: currentURL[1]},
-          success: function(ele)
+          success: function(data)
           {
             var boardThreads= [];
             //
             // THIS ARRAY SET UP IS FOR CODE READABILITIES AND TESTING!
             // THIS IS NOT WHAT IT WOULD LOOK LIKE TO GO LIVE
             //
+            data.forEach(function(ele) {
               console.log(ele);//can I use typeScript please?!
               var thread = ['<div class="thread">'];
               thread.push('<div class="main">')
@@ -63,6 +64,7 @@
               thread.push('<input type="text" placeholder="password to delete" name="delete_password" required=""><input style="margin-left: 5px" type="submit" value="Submit">')
               thread.push('</form></div></div></div>')
               boardThreads.push(thread.join(''));
+              });
             $('#boardDisplay').html(boardThreads.join(''));
           }
         });
