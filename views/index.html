@@ -10,65 +10,76 @@
     <link rel="stylesheet" href="./public/style.css">
   </head>
   <body>
+    <div id="container">
     <header>
       <h1>
-        ISQA_3 - Anon Message Board
+        Anonymus Message Board
       </h1>
     </header>
-    <div id='testui' style='margin-left: 5%'>
-      <h2 style="text-align: left">API Tests:</h2>
-        <h4>New thread (POST /api/threads/:board)</h4>
-        <form action="/api/threads/test" method="post" id="newThread">
-          <input type='text' placeholder='board' id='board1' name='board' required=''><br>
-          <textarea type='text' placeholder='Thread text...' name='text' required=''></textarea><br>
-          <input type='text' placeholder='password to delete' name='delete_password' required=''><br>
-          <input type="submit" value="Submit">
-        </form>
-        <hr>
-        <h4>Report thread (PUT /api/threads/:board)</h4>
-        <form id="reportThread">
-          <input type='text' placeholder='board' id='board2' name='board' required=''><br>
-          <input type='text' placeholder='id to report' name='thread_id' required=''><br>
-          <input type="submit" value="Submit">
-        </form>
-        <hr>
-        <h4>Delete thread (DELETE /api/threads/:board)</h4>
-        <form id="deleteThread">
-          <input type='text' placeholder='board' id='board3' name='board' required=''><br>
-          <input type='text' placeholder='id to delete' name='thread_id' required=''><br>
-          <input type='text' placeholder='password' name='delete_password' required=''><br>
-          <input type="submit" value="Submit">
-        </form>
-        <hr>
+    <main>
+      <h2>Threads</h2>
+      <div id='row'>
+        <article>
+          <h3>New thread</h3>
+          <form action="/api/threads/test" method="post" id="newThread">
+            <input type='text' placeholder='board' id='board1' name='board' required=''><br>
+            <textarea type='text' placeholder='Thread text...' name='text' required=''></textarea><br>
+            <input type='text' placeholder='password to delete' name='delete_password' required=''><br>
+            <input type="submit" value="New thread" class="new">
+          </form>
+        </article>
+        <article>
+          <h3>Report thread</h3>
+          <form id="reportThread">
+            <input type='text' placeholder='board' id='board2' name='board' required=''><br>
+            <input type='text' placeholder='id to report' name='thread_id' required=''><br>
+            <input type="submit" value="Report" class="report">
+          </form>
+        </article>
+        <article>
+          <h3>Delete thread</h3>
+          <form id="deleteThread">
+            <input type='text' placeholder='board' id='board3' name='board' required=''><br>
+            <input type='text' placeholder='id to delete' name='thread_id' required=''><br>
+            <input type='text' placeholder='password' name='delete_password' required=''><br>
+            <input type="submit" value="Delete" class="delete">
+          </form>
+        </article>
+      </div>
+      <h2>Replies</h2>
+      <div id='row'>
+        <article>
+          <h3>New reply</h3>
+          <form action="/api/threads/test" method="post" id="newReply">
+            <input type='text' placeholder='board' id='board4' name='board' required=''><br>
+            <input type='text' placeholder='thread id' name='thread_id' required=''><br>
+            <textarea type='text' placeholder='Thread text...' name='text' required=''></textarea><br>
+            <input type='text' placeholder='password to delete' name='delete_password' required=''><br>
+            <input type="submit" value="New reply" class="new">
+          </form>
+        </article>
+        <article>
+          <h3>Report reply</h3>
+          <form id="reportReply">
+            <input type='text' placeholder='board' id='board5' name='board' required=''><br>
+            <input type='text' placeholder='thread id' name='thread_id' required=''><br>
+            <input type='text' placeholder='id to report' name='reply_id' required=''><br>
+            <input type="submit" value="Report" class="report">
+          </form>
+        </article>
+        <article>
+          <h3>Delete reply</h3>
+          <form id="deleteReply">
+            <input type='text' placeholder='board' id='board6' name='board' required=''><br>
+            <input type='text' placeholder='thread id' name='thread_id' required=''><br>
+            <input type='text' placeholder='id to delete' name='reply_id' required=''><br>
+            <input type='text' placeholder='password' name='delete_password' required=''><br>
+            <input type="submit" value="Delete" class="delete">
+          </form> 
+        </article>
+      </div>        
         
-        
-        <h4>New reply (POST /api/replies/:board)</h4>
-        <form action="/api/threads/test" method="post" id="newReply">
-          <input type='text' placeholder='board' id='board4' name='board' required=''><br>
-          <input type='text' placeholder='thread id' name='thread_id' required=''><br>
-          <textarea type='text' placeholder='Thread text...' name='text' required=''></textarea><br>
-          <input type='text' placeholder='password to delete' name='delete_password' required=''><br>
-          <input type="submit" value="Submit">
-        </form>
-        <hr>
-        <h4>Report reply (PUT /api/replies/:board)</h4>
-        <form id="reportReply">
-          <input type='text' placeholder='board' id='board5' name='board' required=''><br>
-          <input type='text' placeholder='thread id' name='thread_id' required=''><br>
-          <input type='text' placeholder='id to report' name='reply_id' required=''><br>
-          <input type="submit" value="Submit">
-        </form>
-        <hr>
-        <h4>Delete reply (DELETE /api/replies/:board)</h4>
-        <form id="deleteReply">
-          <input type='text' placeholder='board' id='board6' name='board' required=''><br>
-          <input type='text' placeholder='thread id' name='thread_id' required=''><br>
-          <input type='text' placeholder='id to delete' name='reply_id' required=''><br>
-          <input type='text' placeholder='password' name='delete_password' required=''><br>
-          <input type="submit" value="Submit">
-        </form>        
-    </div>
-    <hr style='margin: 50px; margin-top: 200px'>
+  </div>
     <!-- Your web-app is https, so your scripts need to be too -->
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
@@ -137,5 +148,6 @@
         });
       });
    </script>
+   <footer>coded by <a href="http://www.vinweb.hu/">vinweb</a> · <a href="https://github.com/vinweb/messageboard">GitHub</a></footer>
   </body>
 </html>

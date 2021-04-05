@@ -1,36 +1,166 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&family=Rubik:wght@700&display=swap");
+
 * {
-  margin: 0px;
-  padding: 0px;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: "Karla", sans-serif;
+    color: #595959;
 }
 
 body {
-  padding: 10px;
+    padding: 10px;
+    background: #747e97;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: "Rubik", sans-serif;
+}
+
+h1 {
+    font-size: 3rem;
+    text-align: center;
+    color: white;
+}
+h2 {
+    font-size: 2rem;
+    margin: 20px 10px 10px 10px;
+    color: white;
+}
+h3 {
+    font-size: 1.5rem;
+    padding: 1rem 0 0.5rem 0;
+}
+
+header {
+    padding: 1.5rem;
+}
+
+#container {
+    max-width: 1000px;
+    margin: 10px auto;
+    /* background-color: beige; */
+    padding: 1rem;
+}
+
+#row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+article {
+    display: flex;
+    flex-flow: column wrap;
+    flex: 1 0 300px;
+    background-color: white;
+    margin: 10px;
+    min-width: 200px;
+    /* flex-grow: 1; */
+    padding: 1rem;
+    border-radius: 15px;
+}
+
+input,
+textarea {
+    font-family: inherit;
+    font-size: inherit;
+    margin: 10px 0;
+}
+
+input[type="text"] {
+    padding: 10px;
+    border: 2px solid #eee;
+    width: 100%;
+    /* box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+    border-radius: 10px; */
+}
+
+/* input[type="submit"] {
+    flex: 1;
+} */
+
+textarea {
+    resize: vertical;
+    padding: 10px;
+    border: 2px solid #eee;
+    width: 100%;
+}
+
+.new,
+.delete {
+    color: white;
+    font-weight: bold;
+    background-color: #fc9c58;
+    border: none;
+    border-radius: 100px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.new:hover,
+.delete:hover {
+    background-color: #e79654;
+}
+
+.report {
+    color: #fc9c58;
+    background-color: white;
+    border: 1px solid #fc9c58;
+    font-weight: bold;
+    border-radius: 100px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.report:hover {
+    background-color: #fff8f3;
 }
 
 .replies {
-  margin-left: 50px;
+    margin-left: 50px;
 }
 
 .reply {
-  border: 1px dotted black;
-  margin: 5px;
-  padding: 5px;
+    border: 1px dotted #595959;
+    margin: 10px;
+    padding: 20px;
 }
 
 .newReply {
-  margin: 10px 5px 10px 5px;
+    margin: 10px 5px 10px 5px;
 }
 
 .thread {
-  border: 2px solid black;
-  padding: 5px;
-  margin-bottom: 5px;
+    padding: 5px;
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 15px;
 }
 
 .id {
-  font-size: 10.5px;
+    font-size: 10.5px;
 }
 
 #submitNewThread {
-  margin: 50px;
+    margin: 50px;
+}
+
+a {
+    text-decoration: none;
+    color: #fc9c58;
+}
+
+a:hover {
+    color: #e79654;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem 0;
+    color: white;
 }
