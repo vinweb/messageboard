@@ -69,7 +69,7 @@ module.exports = function (app) {
                     res.json("incorrect id");
                 } else if (req.body.delete_password === doc.delete_password) {
                     doc.remove();
-                    res.json("success");
+                    res.json("successfully deleted");
                 } else if (req.body.delete_password !== doc.delete_password) {
                     res.json("incorrect password");
                 }
@@ -83,7 +83,7 @@ module.exports = function (app) {
                 { reported: true },
                 (err, doc) => {
                     if (err) console.log(err);
-                    res.json("success");
+                    res.json("successfully updated");
                 }
             );
         });
@@ -119,8 +119,6 @@ module.exports = function (app) {
             let board = req.params.board;
             let id = req.query.thread_id;
             let thread = mongoose.model(board, threadSchema);
-            //console.log(req.params);
-            //console.log(req.query);
             /* thread.findById(id, (err, doc) => {
                 if (err) console.log(err);
                 delete doc.reported;
@@ -169,7 +167,7 @@ module.exports = function (app) {
                             { new: true },
                             (err, doc) => {
                                 if (err) console.log(err);
-                                return res.json("success");
+                                return res.json("successfully deleted");
                             }
                         );
                     }
@@ -192,7 +190,7 @@ module.exports = function (app) {
                 { new: true },
                 (err, doc) => {
                     if (err) console.log(err);
-                    return res.json("success");
+                    return res.json("successfully updated");
                 }
             );
         });

@@ -100,10 +100,7 @@
             type: "PUT",
             url: url,
             data: $(this).serialize(),
-            success: function(data)
-            {
-              alert(data);
-            }
+            success: function(data) { alert(data); window.location.reload(true); }
           });
           e.preventDefault();
         });
@@ -113,10 +110,7 @@
             type: "DELETE",
             url: url,
             data: $(this).serialize(),
-            success: function(data)
-            {
-              alert(data);
-            }
+            success: function(data) { alert(data); window.location.reload(true); }
           });
           e.preventDefault();
         });
@@ -126,10 +120,7 @@
             type: "PUT",
             url: url,
             data: $(this).serialize(),
-            success: function(data)
-            {
-              alert(data);
-            }
+            success: function(data) { alert(data); window.location.reload(true); }
           });
           e.preventDefault();
         });
@@ -139,10 +130,7 @@
             type: "DELETE",
             url: url,
             data: $(this).serialize(),
-            success: function(data)
-            {
-              alert(data);
-            }
+            success: function(data) { alert(data); window.location.reload(true); }
           });
           e.preventDefault();
         });
